@@ -68,25 +68,12 @@ O React Starter Kit já inclui vários componentes shadcn/ui. Caso precise de co
 npx shadcn@latest add button card dialog dropdown-menu input label textarea table
 ```
 
-### Passo 3: Instalar o pacote Laravel Auto CRUD (branch inertia-react)
+### Passo 3: Instalar o pacote Laravel Auto CRUD
 
-Adicione o repositório no seu `composer.json`:
-
-```json
-{
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/affonso/laravel-auto-crud-react"
-        }
-    ]
-}
-```
-
-Instale o pacote especificando o branch `inertia-react`:
+Instale o pacote:
 
 ```bash
-composer require affonso/laravel-auto-crud-react:dev-inertia-react --dev
+composer require affonso/laravel-auto-crud-react --dev
 ```
 
 ### Passo 4: Publicar a configuração
@@ -94,7 +81,7 @@ composer require affonso/laravel-auto-crud-react:dev-inertia-react --dev
 Publique o arquivo de configuração:
 
 ```bash
-php artisan vendor:publish --provider="Affonso\LaravelAutoCrudReact\LaravelAutoCrudReactServiceProvider" --tag="auto-crud-config"
+php artisan vendor:publish --tag="auto-crud-config"
 ```
 
 ### Passo 5: Criar o componente DataTable (opcional mas recomendado)
@@ -589,12 +576,11 @@ npm install && npm run build
 npx shadcn@latest add button card dialog dropdown-menu input label textarea table
 npm install @tanstack/react-table
 
-# 4. Adicionar repositório no composer.json e instalar o pacote
-# (veja Passo 3 acima para configurar o repositório)
-composer require affonso/laravel-auto-crud-react:dev-inertia-react --dev
+# 4. Instalar o pacote
+composer require affonso/laravel-auto-crud-react --dev
 
 # 5. Publicar configuração
-php artisan vendor:publish --provider="Affonso\LaravelAutoCrudReact\LaravelAutoCrudReactServiceProvider" --tag="auto-crud-config"
+php artisan vendor:publish --tag="auto-crud-config"
 
 # 6. Criar o componente DataTable (veja a seção acima)
 
