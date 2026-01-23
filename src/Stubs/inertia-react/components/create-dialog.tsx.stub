@@ -1,0 +1,66 @@
+import { useForm } from '@inertiajs/react';
+import { FormEventHandler } from 'react';
+import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+
+interface CreateDialogProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+}
+
+export function CreateDialog({ open, onOpenChange }: CreateDialogProps) {
+    const { data, setData, post, processing, errors, reset } = useForm({
+{{ formFields }}
+    });
+
+    const handleSubmit: FormEventHandler = (e) => {
+        e.preventDefault();
+        post(route('{{ routeName }}.store'), {
+            onSuccess: () => {
+                reset();
+                onOpenChange(false);
+            },
+        });
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-[500px]">
+                <DialogHeader>
+                    <DialogTitle>Create {{ model }}</DialogTitle>
+                    <DialogDescription>
+                        Add a new {{ model | lower }} to your collection.
+                    </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleSubmit}>
+                    <div className="grid gap-4 py-4">
+{{ formInputs }}
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => onOpenChange(false)}
+                            disabled={processing}
+                        >
+                            Cancel
+                        </Button>
+                        <Button type="submit" disabled={processing}>
+                            {processing ? 'Creating...' : 'Create'}
+                        </Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
+}

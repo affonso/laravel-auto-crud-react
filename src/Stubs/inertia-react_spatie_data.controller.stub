@@ -1,0 +1,53 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Http\Controllers\Controller;
+use {{ spatieDataNamespace }};
+use {{ modelNamespace }};
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
+use Illuminate\Http\RedirectResponse;
+
+class {{ class }} extends Controller
+{
+    public function index(): InertiaResponse
+    {
+        ${{ modelPlural }} = {{ spatieData }}::collect({{ model }}::latest()->paginate(10));
+
+        return Inertia::render('{{ pageComponent }}/index', [
+            '{{ modelPlural }}' => ${{ modelPlural }},
+        ]);
+    }
+
+    public function store({{ spatieData }} $data): RedirectResponse
+    {
+        {{ model }}::create($data->all());
+
+        return redirect()->route('{{ routeName }}.index')
+            ->with('success', '{{ model }} created successfully');
+    }
+
+    public function show({{ model }} ${{ modelVariable }}): InertiaResponse
+    {
+        return Inertia::render('{{ pageComponent }}/show', [
+            '{{ modelVariable }}' => ${{ modelVariable }},
+        ]);
+    }
+
+    public function update({{ spatieData }} $data, {{ model }} ${{ modelVariable }}): RedirectResponse
+    {
+        ${{ modelVariable }}->update($data->all());
+
+        return redirect()->route('{{ routeName }}.index')
+            ->with('success', '{{ model }} updated successfully');
+    }
+
+    public function destroy({{ model }} ${{ modelVariable }}): RedirectResponse
+    {
+        ${{ modelVariable }}->delete();
+
+        return redirect()->route('{{ routeName }}.index')
+            ->with('success', '{{ model }} deleted successfully');
+    }
+}

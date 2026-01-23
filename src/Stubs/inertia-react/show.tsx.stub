@@ -1,0 +1,46 @@
+import { Head, Link } from '@inertiajs/react';
+import AppLayout from '@/layouts/app-layout';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowLeft } from 'lucide-react';
+import type { {{ model }} } from '@/types/{{ modelKebab }}';
+
+interface Show{{ model }}PageProps {
+    {{ modelVariable }}: {{ model }};
+}
+
+export default function Show{{ model }}Page({ {{ modelVariable }} }: Show{{ model }}PageProps) {
+    return (
+        <AppLayout>
+            <Head title={`{{ model }} #${{{ modelVariable }}.id}`} />
+
+            <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                    <Link href={route('{{ routeName }}.index')}>
+                        <Button variant="ghost" size="icon">
+                            <ArrowLeft className="h-4 w-4" />
+                        </Button>
+                    </Link>
+                    <div>
+                        <h1 className="text-3xl font-bold tracking-tight">{{ model }} Details</h1>
+                        <p className="text-muted-foreground">
+                            View {{ model | lower }} information
+                        </p>
+                    </div>
+                </div>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>{{ model }} #{{ '{' }}{{ modelVariable }}.id{{ '}' }}</CardTitle>
+                        <CardDescription>
+                            Created {{ '{' }}new Date({{ modelVariable }}.created_at).toLocaleDateString(){{ '}' }}
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+{{ fieldList }}
+                    </CardContent>
+                </Card>
+            </div>
+        </AppLayout>
+    );
+}

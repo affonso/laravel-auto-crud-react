@@ -1,0 +1,76 @@
+import { useForm } from '@inertiajs/react';
+import { FormEventHandler, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import type { {{ model }} } from '@/types/{{ modelKebab }}';
+
+interface EditDialogProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    {{ modelVariable }}: {{ model }};
+}
+
+export function EditDialog({ open, onOpenChange, {{ modelVariable }} }: EditDialogProps) {
+    const { data, setData, put, processing, errors, reset } = useForm({
+{{ formFields }}
+    });
+
+    useEffect(() => {
+        if ({{ modelVariable }}) {
+            setData({
+{{ formFieldsFromModel }}
+            });
+        }
+    }, [{{ modelVariable }}]);
+
+    const handleSubmit: FormEventHandler = (e) => {
+        e.preventDefault();
+        put(route('{{ routeName }}.update', {{ modelVariable }}.id), {
+            onSuccess: () => {
+                reset();
+                onOpenChange(false);
+            },
+        });
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-[500px]">
+                <DialogHeader>
+                    <DialogTitle>Edit {{ model }}</DialogTitle>
+                    <DialogDescription>
+                        Update the {{ model | lower }} information.
+                    </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleSubmit}>
+                    <div className="grid gap-4 py-4">
+{{ formInputs }}
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => onOpenChange(false)}
+                            disabled={processing}
+                        >
+                            Cancel
+                        </Button>
+                        <Button type="submit" disabled={processing}>
+                            {processing ? 'Updating...' : 'Update'}
+                        </Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
+}

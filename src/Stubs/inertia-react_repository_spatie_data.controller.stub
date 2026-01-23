@@ -1,0 +1,71 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Http\Controllers\Controller;
+use {{ spatieDataNamespace }};
+use {{ serviceNamespace }};
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
+use Illuminate\Http\RedirectResponse;
+
+class {{ class }} extends Controller
+{
+    /**
+     * @var {{ service }}
+     */
+    protected {{ service }} ${{ serviceVariable }};
+
+    /**
+     * DummyModel Constructor
+     *
+     * @param {{ service }} ${{ serviceVariable }}
+     *
+     */
+    public function __construct({{ service }} ${{ serviceVariable }})
+    {
+        $this->{{ serviceVariable }} = ${{ serviceVariable }};
+    }
+
+    public function index(): InertiaResponse
+    {
+        ${{ modelPlural }} = $this->{{ serviceVariable }}->getAll();
+
+        return Inertia::render('{{ pageComponent }}/index', [
+            '{{ modelPlural }}' => ${{ modelPlural }},
+        ]);
+    }
+
+    public function store({{ spatieData }} $data): RedirectResponse
+    {
+        $this->{{ serviceVariable }}->save($data->all());
+
+        return redirect()->route('{{ routeName }}.index')
+            ->with('success', 'Created successfully');
+    }
+
+    public function show(int $id): InertiaResponse
+    {
+        ${{ modelVariable }} = $this->{{ serviceVariable }}->getById($id);
+
+        return Inertia::render('{{ pageComponent }}/show', [
+            '{{ modelVariable }}' => ${{ modelVariable }},
+        ]);
+    }
+
+    public function update({{ spatieData }} $data, int $id): RedirectResponse
+    {
+        $this->{{ serviceVariable }}->update($data->all(), $id);
+
+        return redirect()->route('{{ routeName }}.index')
+            ->with('success', 'Updated successfully');
+    }
+
+    public function destroy(int $id): RedirectResponse
+    {
+        $this->{{ serviceVariable }}->deleteById($id);
+
+        return redirect()->route('{{ routeName }}.index')
+            ->with('success', 'Deleted successfully');
+    }
+}

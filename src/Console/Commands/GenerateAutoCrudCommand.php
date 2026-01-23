@@ -102,8 +102,8 @@ class GenerateAutoCrudCommand extends Command
             return false;
         }
 
-        if ($this->option('type') && empty(array_intersect($this->option('type'), ['api', 'web']))) {
-            alert('Make sure that the type is "api", "web" or "both".');
+        if ($this->option('type') && empty(array_intersect($this->option('type'), ['api', 'web', 'inertia-react']))) {
+            alert('Make sure that the type is "api", "web", "inertia-react" or a combination.');
 
             return false;
         }

@@ -13,6 +13,8 @@ use Mrmarchone\LaravelAutoCrud\Builders\RouteBuilder;
 use Mrmarchone\LaravelAutoCrud\Builders\ServiceBuilder;
 use Mrmarchone\LaravelAutoCrud\Builders\SpatieDataBuilder;
 use Mrmarchone\LaravelAutoCrud\Builders\ViewBuilder;
+use Mrmarchone\LaravelAutoCrud\Builders\InertiaReactPageBuilder;
+use Mrmarchone\LaravelAutoCrud\Builders\TypeScriptTypeBuilder;
 
 use function Laravel\Prompts\info;
 
@@ -25,7 +27,9 @@ class CRUDGenerator
         private ViewBuilder $viewBuilder,
         private RepositoryBuilder $repositoryBuilder,
         private ServiceBuilder $serviceBuilder,
-        private SpatieDataBuilder $spatieDataBuilder)
+        private SpatieDataBuilder $spatieDataBuilder,
+        private InertiaReactPageBuilder $inertiaReactPageBuilder,
+        private TypeScriptTypeBuilder $typeScriptTypeBuilder)
     {
         $this->controllerBuilder = new ControllerBuilder;
         $this->resourceBuilder = new ResourceBuilder;
@@ -35,6 +39,8 @@ class CRUDGenerator
         $this->repositoryBuilder = new RepositoryBuilder;
         $this->serviceBuilder = new ServiceBuilder;
         $this->spatieDataBuilder = new SpatieDataBuilder;
+        $this->inertiaReactPageBuilder = new InertiaReactPageBuilder;
+        $this->typeScriptTypeBuilder = new TypeScriptTypeBuilder;
     }
 
     public function generate($modelData, array $options): void
@@ -76,6 +82,10 @@ class CRUDGenerator
 
         if (in_array('web', $types)) {
             $controllerName = $this->generateWebController($modelData, $data['requestName'], $data['repository'], $data['service'], $options, $data['spatieData']);
+        }
+
+        if (in_array('inertia-react', $types)) {
+            $controllerName = $this->generateInertiaReactController($modelData, $data['requestName'], $data['repository'], $data['service'], $options, $data['spatieData']);
         }
 
         if (! $controllerName) {
@@ -122,6 +132,33 @@ class CRUDGenerator
         }
 
         $this->viewBuilder->create($modelData, $options['overwrite']);
+
+        if (! $controllerName) {
+            throw new InvalidArgumentException('Unsupported controller type');
+        }
+
+        return $controllerName;
+    }
+
+    private function generateInertiaReactController(array $modelData, string $requestName, string $repository, string $service, array $options, string $spatieData = ''): string
+    {
+        $controllerName = null;
+
+        if ($options['pattern'] == 'spatie-data') {
+            $controllerName = $repository
+                ? $this->controllerBuilder->createInertiaReactRepositorySpatieData($modelData, $spatieData, $service, $options['overwrite'])
+                : $this->controllerBuilder->createInertiaReactSpatieData($modelData, $spatieData, $options['overwrite']);
+        } elseif ($options['pattern'] == 'normal') {
+            $controllerName = $repository
+                ? $this->controllerBuilder->createInertiaReactRepository($modelData, $requestName, $service, $options['overwrite'])
+                : $this->controllerBuilder->createInertiaReact($modelData, $requestName, $options['overwrite']);
+        }
+
+        // Generate TypeScript types
+        $this->typeScriptTypeBuilder->create($modelData, $options['overwrite']);
+
+        // Generate React pages and components
+        $this->inertiaReactPageBuilder->create($modelData, $options['overwrite']);
 
         if (! $controllerName) {
             throw new InvalidArgumentException('Unsupported controller type');
