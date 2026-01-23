@@ -34,34 +34,35 @@ Esta extensão adiciona a opção `--type=inertia-react` que gera:
 
 ### Passo 1: Criar um novo projeto Laravel 12 com React Starter Kit
 
-Primeiro, crie um novo projeto Laravel 12 usando o React Starter Kit (que já inclui Inertia.js, React 19 e TypeScript):
+Primeiro, certifique-se de ter o Laravel Installer instalado:
 
 ```bash
-composer create-project laravel/laravel meu-projeto
+composer global require laravel/installer
+```
+
+Crie um novo projeto Laravel 12 com o React Starter Kit:
+
+```bash
+laravel new meu-projeto --react
+```
+
+O instalador irá configurar automaticamente:
+- Inertia 2
+- React 19
+- TypeScript
+- Tailwind CSS
+- shadcn/ui (componentes já incluídos)
+
+Instale as dependências e compile os assets:
+
+```bash
 cd meu-projeto
+npm install && npm run build
 ```
 
-Instale o React Starter Kit:
+### Passo 2: Instalar componentes shadcn/ui adicionais (se necessário)
 
-```bash
-php artisan breeze:install react --typescript
-```
-
-Instale as dependências do frontend:
-
-```bash
-npm install
-```
-
-### Passo 2: Instalar componentes shadcn/ui
-
-Inicialize o shadcn/ui no projeto:
-
-```bash
-npx shadcn@latest init
-```
-
-Instale os componentes necessários:
+O React Starter Kit já inclui vários componentes shadcn/ui. Caso precise de componentes adicionais:
 
 ```bash
 npx shadcn@latest add button card dialog dropdown-menu input label textarea table
@@ -76,7 +77,7 @@ Adicione o repositório no seu `composer.json`:
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/danielfcastro/laravel-auto-crud-react"
+            "url": "https://github.com/affonso/laravel-auto-crud-react"
         }
     ]
 }
@@ -85,7 +86,7 @@ Adicione o repositório no seu `composer.json`:
 Instale o pacote especificando o branch `inertia-react`:
 
 ```bash
-composer require mrmarchone/laravel-auto-crud:dev-inertia-react --dev
+composer require affonso/laravel-auto-crud-react:dev-inertia-react --dev
 ```
 
 ### Passo 4: Publicar a configuração
@@ -93,7 +94,7 @@ composer require mrmarchone/laravel-auto-crud:dev-inertia-react --dev
 Publique o arquivo de configuração:
 
 ```bash
-php artisan vendor:publish --provider="Mrmarchone\LaravelAutoCrud\LaravelAutoCrudServiceProvider" --tag="auto-crud-config"
+php artisan vendor:publish --provider="Affonso\LaravelAutoCrudReact\LaravelAutoCrudReactServiceProvider" --tag="auto-crud-config"
 ```
 
 ### Passo 5: Criar o componente DataTable (opcional mas recomendado)
@@ -107,6 +108,22 @@ npm install @tanstack/react-table
 Veja a seção [DataTable Component](#datatable-component) abaixo para um exemplo de implementação.
 
 ## Uso Básico
+
+> **Importante:** O Model deve existir antes de executar o comando. O pacote lê as informações do Model existente (colunas, tipos de dados) para gerar os arquivos CRUD.
+
+### Pré-requisito: Criar o Model
+
+Antes de gerar o CRUD, crie o Model e a migration:
+
+```bash
+php artisan make:model Post -m
+```
+
+Defina as colunas na migration e execute:
+
+```bash
+php artisan migrate
+```
 
 ### Gerar CRUD Inertia React
 
@@ -536,7 +553,7 @@ export function DataTable<TData, TValue>({
 ## Troubleshooting
 
 ### Erro: "Class 'Inertia' not found"
-O Laravel 12 React Starter Kit já inclui o Inertia.js. Se estiver usando uma instalação manual, instale:
+O Laravel 12 React Starter Kit já inclui o Inertia.js. Se estiver usando uma instalação manual sem o starter kit, instale:
 ```bash
 composer require inertiajs/inertia-laravel
 npm install @inertiajs/react
@@ -560,24 +577,24 @@ npm install @tanstack/react-table
 ## Resumo da Instalação
 
 ```bash
-# 1. Criar projeto Laravel 12
-composer create-project laravel/laravel meu-projeto
+# 1. Instalar o Laravel Installer (se necessário)
+composer global require laravel/installer
+
+# 2. Criar projeto Laravel 12 com React Starter Kit
+laravel new meu-projeto --react
 cd meu-projeto
+npm install && npm run build
 
-# 2. Instalar React Starter Kit
-php artisan breeze:install react --typescript
-npm install
-
-# 3. Inicializar e instalar componentes shadcn/ui
-npx shadcn@latest init
+# 3. Instalar dependências adicionais (se necessário)
 npx shadcn@latest add button card dialog dropdown-menu input label textarea table
 npm install @tanstack/react-table
 
 # 4. Adicionar repositório no composer.json e instalar o pacote
-composer require mrmarchone/laravel-auto-crud:dev-inertia-react --dev
+# (veja Passo 3 acima para configurar o repositório)
+composer require affonso/laravel-auto-crud-react:dev-inertia-react --dev
 
 # 5. Publicar configuração
-php artisan vendor:publish --provider="Mrmarchone\LaravelAutoCrud\LaravelAutoCrudServiceProvider" --tag="auto-crud-config"
+php artisan vendor:publish --provider="Affonso\LaravelAutoCrudReact\LaravelAutoCrudReactServiceProvider" --tag="auto-crud-config"
 
 # 6. Criar o componente DataTable (veja a seção acima)
 
@@ -587,9 +604,9 @@ php artisan auto-crud:generate --model=SeuModel --type=inertia-react
 
 ## Licença
 
-MIT License - igual ao pacote original.
+MIT License.
 
 ## Créditos
 
-- Pacote original: [mrmarchone/laravel-auto-crud](https://github.com/mrmarchone/laravel-auto-crud)
-- Extensão Inertia React: Desenvolvida como fork
+- Baseado em: [mrmarchone/laravel-auto-crud](https://github.com/mrmarchone/laravel-auto-crud)
+- Fork com suporte Inertia React: [affonso/laravel-auto-crud-react](https://github.com/affonso/laravel-auto-crud-react)
