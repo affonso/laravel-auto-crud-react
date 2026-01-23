@@ -32,15 +32,79 @@ Esta extensão adiciona a opção `--type=inertia-react` que gera:
 
 ## Instalação
 
+### Passo 1: Criar um novo projeto Laravel 12 com React Starter Kit
+
+Primeiro, crie um novo projeto Laravel 12 usando o React Starter Kit (que já inclui Inertia.js, React 19 e TypeScript):
+
 ```bash
-composer require mrmarchone/laravel-auto-crud --dev
+composer create-project laravel/laravel meu-projeto
+cd meu-projeto
 ```
 
-Publique a configuração:
+Instale o React Starter Kit:
+
+```bash
+php artisan breeze:install react --typescript
+```
+
+Instale as dependências do frontend:
+
+```bash
+npm install
+```
+
+### Passo 2: Instalar componentes shadcn/ui
+
+Inicialize o shadcn/ui no projeto:
+
+```bash
+npx shadcn@latest init
+```
+
+Instale os componentes necessários:
+
+```bash
+npx shadcn@latest add button card dialog dropdown-menu input label textarea table
+```
+
+### Passo 3: Instalar o pacote Laravel Auto CRUD (branch inertia-react)
+
+Adicione o repositório no seu `composer.json`:
+
+```json
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/danielfcastro/laravel-auto-crud-react"
+        }
+    ]
+}
+```
+
+Instale o pacote especificando o branch `inertia-react`:
+
+```bash
+composer require mrmarchone/laravel-auto-crud:dev-inertia-react --dev
+```
+
+### Passo 4: Publicar a configuração
+
+Publique o arquivo de configuração:
 
 ```bash
 php artisan vendor:publish --provider="Mrmarchone\LaravelAutoCrud\LaravelAutoCrudServiceProvider" --tag="auto-crud-config"
 ```
+
+### Passo 5: Criar o componente DataTable (opcional mas recomendado)
+
+Crie o componente `data-table.tsx` em `resources/js/components/ui/data-table.tsx`. Este é um componente customizado baseado no `@tanstack/react-table`:
+
+```bash
+npm install @tanstack/react-table
+```
+
+Veja a seção [DataTable Component](#datatable-component) abaixo para um exemplo de implementação.
 
 ## Uso Básico
 
@@ -338,10 +402,141 @@ php artisan auto-crud:generate --model=Post --type=api --type=inertia-react
 - Estrutura de comandos
 - Configuração base
 
+## DataTable Component
+
+O componente DataTable é customizado e não vem por padrão com o shadcn/ui. Crie o arquivo `resources/js/components/ui/data-table.tsx`:
+
+```tsx
+import {
+    ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { router } from '@inertiajs/react';
+
+interface PaginationProps {
+    currentPage: number;
+    lastPage: number;
+    perPage: number;
+    total: number;
+}
+
+interface DataTableProps<TData, TValue> {
+    columns: ColumnDef<TData, TValue>[];
+    data: TData[];
+    pagination?: PaginationProps;
+    routeName?: string;
+}
+
+export function DataTable<TData, TValue>({
+    columns,
+    data,
+    pagination,
+    routeName,
+}: DataTableProps<TData, TValue>) {
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+    });
+
+    const handlePageChange = (page: number) => {
+        if (routeName) {
+            router.get(route(routeName), { page }, { preserveState: true });
+        }
+    };
+
+    return (
+        <div>
+            <div className="rounded-md border">
+                <Table>
+                    <TableHeader>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => (
+                                    <TableHead key={header.id}>
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(
+                                                  header.column.columnDef.header,
+                                                  header.getContext()
+                                              )}
+                                    </TableHead>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow key={row.id}>
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext()
+                                            )}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={columns.length}
+                                    className="h-24 text-center"
+                                >
+                                    Nenhum resultado encontrado.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+            {pagination && pagination.lastPage > 1 && (
+                <div className="flex items-center justify-between py-4">
+                    <span className="text-sm text-muted-foreground">
+                        Página {pagination.currentPage} de {pagination.lastPage} ({pagination.total} itens)
+                    </span>
+                    <div className="flex gap-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handlePageChange(pagination.currentPage - 1)}
+                            disabled={pagination.currentPage <= 1}
+                        >
+                            Anterior
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handlePageChange(pagination.currentPage + 1)}
+                            disabled={pagination.currentPage >= pagination.lastPage}
+                        >
+                            Próximo
+                        </Button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+```
+
 ## Troubleshooting
 
 ### Erro: "Class 'Inertia' not found"
-Instale o Inertia.js:
+O Laravel 12 React Starter Kit já inclui o Inertia.js. Se estiver usando uma instalação manual, instale:
 ```bash
 composer require inertiajs/inertia-laravel
 npm install @inertiajs/react
@@ -350,11 +545,45 @@ npm install @inertiajs/react
 ### Erro: Componentes shadcn/ui não encontrados
 Instale os componentes necessários:
 ```bash
-npx shadcn-ui@latest add button card dialog dropdown-menu input label textarea
+npx shadcn@latest add button card dialog dropdown-menu input label textarea table
 ```
 
 ### DataTable não encontrado
-Crie um componente customizado `data-table.tsx` ou use uma biblioteca como `@tanstack/react-table`.
+Veja a seção [DataTable Component](#datatable-component) acima para criar o componente customizado.
+
+### Erro: Module '@tanstack/react-table' not found
+Instale a dependência:
+```bash
+npm install @tanstack/react-table
+```
+
+## Resumo da Instalação
+
+```bash
+# 1. Criar projeto Laravel 12
+composer create-project laravel/laravel meu-projeto
+cd meu-projeto
+
+# 2. Instalar React Starter Kit
+php artisan breeze:install react --typescript
+npm install
+
+# 3. Inicializar e instalar componentes shadcn/ui
+npx shadcn@latest init
+npx shadcn@latest add button card dialog dropdown-menu input label textarea table
+npm install @tanstack/react-table
+
+# 4. Adicionar repositório no composer.json e instalar o pacote
+composer require mrmarchone/laravel-auto-crud:dev-inertia-react --dev
+
+# 5. Publicar configuração
+php artisan vendor:publish --provider="Mrmarchone\LaravelAutoCrud\LaravelAutoCrudServiceProvider" --tag="auto-crud-config"
+
+# 6. Criar o componente DataTable (veja a seção acima)
+
+# 7. Gerar CRUD
+php artisan auto-crud:generate --model=SeuModel --type=inertia-react
+```
 
 ## Licença
 
