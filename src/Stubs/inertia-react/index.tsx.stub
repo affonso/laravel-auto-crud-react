@@ -1,0 +1,78 @@
+import { useState } from 'react';
+import { Head } from '@inertiajs/react';
+import AppLayout from '@/layouts/app-layout';
+import { DataTable } from '@/components/ui/data-table';
+import { columns } from './components/columns';
+import { CreateDialog } from './components/create-dialog';
+import { EditDialog } from './components/edit-dialog';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import type { {{ model }} } from '@/types/{{ modelKebab }}';
+
+interface {{ modelPlural }}PageProps {
+    {{ modelPlural }}: {
+        data: {{ model }}[];
+        current_page: number;
+        last_page: number;
+        per_page: number;
+        total: number;
+    };
+}
+
+export default function {{ modelPlural }}Page({ {{ modelPlural }} }: {{ modelPlural }}PageProps) {
+    const [createOpen, setCreateOpen] = useState(false);
+    const [editOpen, setEditOpen] = useState(false);
+    const [selected{{ model }}, setSelected{{ model }}] = useState<{{ model }} | null>(null);
+
+    const handleEdit = ({{ modelVariable }}: {{ model }}) => {
+        setSelected{{ model }}({{ modelVariable }});
+        setEditOpen(true);
+    };
+
+    const handleEditClose = () => {
+        setEditOpen(false);
+        setSelected{{ model }}(null);
+    };
+
+    return (
+        <AppLayout>
+            <Head title="{{ modelPlural }}" />
+
+            <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-3xl font-bold tracking-tight">{{ modelPlural }}</h1>
+                        <p className="text-muted-foreground">
+                            Manage your {{ modelPlural | lower }} here.
+                        </p>
+                    </div>
+                    <Button onClick={() => setCreateOpen(true)}>
+                        <Plus className="mr-2 h-4 w-4" />
+                        New {{ model }}
+                    </Button>
+                </div>
+
+                <DataTable
+                    columns={columns(handleEdit)}
+                    data={{ modelPlural }}.data}
+                    pagination={{
+                        currentPage: {{ modelPlural }}.current_page,
+                        lastPage: {{ modelPlural }}.last_page,
+                        perPage: {{ modelPlural }}.per_page,
+                        total: {{ modelPlural }}.total,
+                    }}
+                />
+
+                <CreateDialog open={createOpen} onOpenChange={setCreateOpen} />
+
+                {selected{{ model }} && (
+                    <EditDialog
+                        open={editOpen}
+                        onOpenChange={handleEditClose}
+                        {{ modelVariable }}={selected{{ model }}}
+                    />
+                )}
+            </div>
+        </AppLayout>
+    );
+}

@@ -162,4 +162,88 @@ class ControllerBuilder extends BaseBuilder
             ];
         });
     }
+
+    public function createInertiaReact(array $modelData, string $request, bool $overwrite = false): string
+    {
+        return $this->fileService->createFromStub($modelData, 'inertia-react.controller', 'Http/Controllers', 'Controller', $overwrite, function ($modelData) use ($request) {
+            $model = $this->getFullModelNamespace($modelData);
+            $requestName = explode('\\', $request);
+
+            return [
+                '{{ requestNamespace }}' => $request,
+                '{{ modelNamespace }}' => $model,
+                '{{ request }}' => end($requestName),
+                '{{ model }}' => $modelData['modelName'],
+                '{{ modelVariable }}' => lcfirst($modelData['modelName']),
+                '{{ pageComponent }}' => Str::plural($modelData['modelName']),
+                '{{ modelPlural }}' => lcfirst(Str::plural($modelData['modelName'])),
+                '{{ routeName }}' => HelperService::toSnakeCase(Str::plural($modelData['modelName'])),
+            ];
+        });
+    }
+
+    public function createInertiaReactRepository(array $modelData, string $request, string $service, bool $overwrite = false): string
+    {
+        return $this->fileService->createFromStub($modelData, 'inertia-react_repository.controller', 'Http/Controllers', 'Controller', $overwrite, function ($modelData) use ($service, $request) {
+            $model = $this->getFullModelNamespace($modelData);
+            $serviceName = explode('\\', $service);
+            $requestName = explode('\\', $request);
+
+            return [
+                '{{ requestNamespace }}' => $request,
+                '{{ request }}' => end($requestName),
+                '{{ serviceNamespace }}' => $service,
+                '{{ service }}' => end($serviceName),
+                '{{ serviceVariable }}' => lcfirst(end($serviceName)),
+                '{{ modelNamespace }}' => $model,
+                '{{ model }}' => $modelData['modelName'],
+                '{{ modelVariable }}' => lcfirst($modelData['modelName']),
+                '{{ pageComponent }}' => Str::plural($modelData['modelName']),
+                '{{ modelPlural }}' => lcfirst(Str::plural($modelData['modelName'])),
+                '{{ routeName }}' => HelperService::toSnakeCase(Str::plural($modelData['modelName'])),
+            ];
+        });
+    }
+
+    public function createInertiaReactSpatieData(array $modelData, string $spatieData, bool $overwrite = false): string
+    {
+        return $this->fileService->createFromStub($modelData, 'inertia-react_spatie_data.controller', 'Http/Controllers', 'Controller', $overwrite, function ($modelData) use ($spatieData) {
+            $model = $this->getFullModelNamespace($modelData);
+            $spatieDataName = explode('\\', $spatieData);
+
+            return [
+                '{{ spatieDataNamespace }}' => $spatieData,
+                '{{ modelNamespace }}' => $model,
+                '{{ spatieData }}' => end($spatieDataName),
+                '{{ model }}' => $modelData['modelName'],
+                '{{ modelVariable }}' => lcfirst($modelData['modelName']),
+                '{{ pageComponent }}' => Str::plural($modelData['modelName']),
+                '{{ modelPlural }}' => lcfirst(Str::plural($modelData['modelName'])),
+                '{{ routeName }}' => HelperService::toSnakeCase(Str::plural($modelData['modelName'])),
+            ];
+        });
+    }
+
+    public function createInertiaReactRepositorySpatieData(array $modelData, string $spatieData, string $service, bool $overwrite = false): string
+    {
+        return $this->fileService->createFromStub($modelData, 'inertia-react_repository_spatie_data.controller', 'Http/Controllers', 'Controller', $overwrite, function ($modelData) use ($service, $spatieData) {
+            $model = $this->getFullModelNamespace($modelData);
+            $serviceName = explode('\\', $service);
+            $spatieDataName = explode('\\', $spatieData);
+
+            return [
+                '{{ spatieDataNamespace }}' => $spatieData,
+                '{{ spatieData }}' => end($spatieDataName),
+                '{{ serviceNamespace }}' => $service,
+                '{{ service }}' => end($serviceName),
+                '{{ serviceVariable }}' => lcfirst(end($serviceName)),
+                '{{ modelNamespace }}' => $model,
+                '{{ model }}' => $modelData['modelName'],
+                '{{ modelVariable }}' => lcfirst($modelData['modelName']),
+                '{{ pageComponent }}' => Str::plural($modelData['modelName']),
+                '{{ modelPlural }}' => lcfirst(Str::plural($modelData['modelName'])),
+                '{{ routeName }}' => HelperService::toSnakeCase(Str::plural($modelData['modelName'])),
+            ];
+        });
+    }
 }
