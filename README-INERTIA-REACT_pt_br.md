@@ -1,26 +1,26 @@
 # Laravel Auto CRUD - Inertia React Extension
 
-Fork of [mrmarchone/laravel-auto-crud](https://github.com/mrmarchone/laravel-auto-crud) with additional support for Laravel 12 React Starter Kit (Inertia + React 19 + TypeScript + shadcn/ui).
+Fork do [mrmarchone/laravel-auto-crud](https://github.com/mrmarchone/laravel-auto-crud) com suporte adicional para Laravel 12 React Starter Kit (Inertia + React 19 + TypeScript + shadcn/ui).
 
-## What's New
+## Novidades
 
-This extension adds the `--type=inertia-react` option that generates:
+Esta extensão adiciona a opção `--type=inertia-react` que gera:
 
-- ✅ Controllers with `Inertia::render()`
-- ✅ React/TSX pages in `resources/js/pages/`
-- ✅ TypeScript types in `resources/js/types/`
-- ✅ Integration with shadcn/ui (DataTable, Dialog, Form)
-- ✅ Repository Pattern support
-- ✅ Spatie Data support
+- ✅ Controllers com `Inertia::render()`
+- ✅ Páginas React/TSX em `resources/js/pages/`
+- ✅ Types TypeScript em `resources/js/types/`
+- ✅ Integração com shadcn/ui (DataTable, Dialog, Form)
+- ✅ Suporte a Repository Pattern
+- ✅ Suporte a Spatie Data
 
-## Requirements
+## Requisitos
 
 - Laravel 12+
 - PHP 8.2+
 - Inertia.js
 - React 19+
 - TypeScript
-- shadcn/ui components installed:
+- shadcn/ui components instalados:
   - `button`
   - `card`
   - `dialog`
@@ -30,128 +30,128 @@ This extension adds the `--type=inertia-react` option that generates:
   - `textarea`
   - `data-table` (custom component)
 
-## Installation
+## Instalação
 
-### Step 1: Create a new Laravel 12 project with React Starter Kit
+### Passo 1: Criar um novo projeto Laravel 12 com React Starter Kit
 
-First, make sure you have the Laravel Installer installed:
+Primeiro, certifique-se de ter o Laravel Installer instalado:
 
 ```bash
 composer global require laravel/installer
 ```
 
-Create a new Laravel 12 project with the React Starter Kit:
+Crie um novo projeto Laravel 12 com o React Starter Kit:
 
 ```bash
-laravel new my-project --react
+laravel new meu-projeto --react
 ```
 
-The installer will automatically configure:
+O instalador irá configurar automaticamente:
 - Inertia 2
 - React 19
 - TypeScript
 - Tailwind CSS
-- shadcn/ui (components already included)
+- shadcn/ui (componentes já incluídos)
 
-Install the dependencies and compile the assets:
+Instale as dependências e compile os assets:
 
 ```bash
-cd my-project
+cd meu-projeto
 npm install && npm run build
 ```
 
-### Step 2: Install additional shadcn/ui components (if needed)
+### Passo 2: Instalar componentes shadcn/ui adicionais (se necessário)
 
-The React Starter Kit already includes several shadcn/ui components. If you need additional components:
+O React Starter Kit já inclui vários componentes shadcn/ui. Caso precise de componentes adicionais:
 
 ```bash
 npx shadcn@latest add button card dialog dropdown-menu input label textarea table
 ```
 
-### Step 3: Install the Laravel Auto CRUD package
+### Passo 3: Instalar o pacote Laravel Auto CRUD
 
-Install the package:
+Instale o pacote:
 
 ```bash
 composer require affonso/laravel-auto-crud-react --dev
 ```
 
-### Step 4: Publish the configuration
+### Passo 4: Publicar a configuração
 
-Publish the configuration file:
+Publique o arquivo de configuração:
 
 ```bash
 php artisan vendor:publish --tag="auto-crud-config"
 ```
 
-### Step 5: Create the DataTable component (optional but recommended)
+### Passo 5: Criar o componente DataTable (opcional mas recomendado)
 
-Create the `data-table.tsx` component in `resources/js/components/ui/data-table.tsx`. This is a custom component based on `@tanstack/react-table`:
+Crie o componente `data-table.tsx` em `resources/js/components/ui/data-table.tsx`. Este é um componente customizado baseado no `@tanstack/react-table`:
 
 ```bash
 npm install @tanstack/react-table
 ```
 
-See the [DataTable Component](#datatable-component) section below for an implementation example.
+Veja a seção [DataTable Component](#datatable-component) abaixo para um exemplo de implementação.
 
-## Basic Usage
+## Uso Básico
 
-> **Important:** The Model must exist before running the command. The package reads information from the existing Model (columns, data types) to generate the CRUD files.
+> **Importante:** O Model deve existir antes de executar o comando. O pacote lê as informações do Model existente (colunas, tipos de dados) para gerar os arquivos CRUD.
 
-### Prerequisite: Create the Model
+### Pré-requisito: Criar o Model
 
-Before generating the CRUD, create the Model and migration:
+Antes de gerar o CRUD, crie o Model e a migration:
 
 ```bash
 php artisan make:model Post -m
 ```
 
-Define the columns in the migration and run:
+Defina as colunas na migration e execute:
 
 ```bash
 php artisan migrate
 ```
 
-### Generate Inertia React CRUD
+### Gerar CRUD Inertia React
 
 ```bash
 php artisan auto-crud:generate --model=Post --type=inertia-react
 ```
 
-This will generate:
+Isso irá gerar:
 
 ```
 app/Http/Controllers/PostController.php
 resources/js/pages/Posts/
-├── index.tsx                      # List with DataTable
-├── show.tsx                       # View
+├── index.tsx                      # Listagem com DataTable
+├── show.tsx                       # Visualização
 └── components/
-    ├── columns.tsx                # DataTable columns definition
-    ├── create-dialog.tsx          # Creation modal
-    └── edit-dialog.tsx            # Edit modal
-resources/js/types/post.d.ts       # TypeScript interface
-routes/web.php                     # Route added
+    ├── columns.tsx                # Definição colunas DataTable
+    ├── create-dialog.tsx          # Modal de criação
+    └── edit-dialog.tsx            # Modal de edição
+resources/js/types/post.d.ts       # Interface TypeScript
+routes/web.php                     # Rota adicionada
 ```
 
-### With Repository Pattern
+### Com Repository Pattern
 
 ```bash
 php artisan auto-crud:generate --model=Post --type=inertia-react --repository
 ```
 
-Additionally generates:
+Adicionalmente gera:
 - `app/Repositories/PostRepository.php`
 - `app/Services/PostService.php`
 
-### With Spatie Data
+### Com Spatie Data
 
 ```bash
 php artisan auto-crud:generate --model=Post --type=inertia-react --pattern=spatie-data
 ```
 
-Uses `Spatie\LaravelData\Data` instead of FormRequest.
+Usa `Spatie\LaravelData\Data` em vez de FormRequest.
 
-### Complete Example
+### Exemplo Completo
 
 ```bash
 php artisan auto-crud:generate \
@@ -161,7 +161,7 @@ php artisan auto-crud:generate \
   --overwrite
 ```
 
-## Generated Files Structure
+## Estrutura dos Arquivos Gerados
 
 ### Controller (PostController.php)
 
@@ -305,24 +305,24 @@ export default function PostsPage({ posts }: PostsPageProps) {
 }
 ```
 
-## Configuration
+## Configuração
 
-Edit `config/laravel_auto_crud.php`:
+Edite `config/laravel_auto_crud.php`:
 
 ```php
 'inertia-react' => [
-    // Path for React/TSX pages
+    // Path para páginas React/TSX
     'pages_path' => 'resources/js/pages',
 
-    // Path for TypeScript types
+    // Path para tipos TypeScript
     'types_path' => 'resources/js/types',
 
-    // Use dialogs instead of separate create/edit pages
+    // Usar dialogs em vez de páginas create/edit separadas
     'use_dialogs' => true,
 ],
 ```
 
-## SQL to TypeScript Type Mapping
+## Mapeamento de Tipos SQL → TypeScript
 
 | SQL Type | TypeScript Type |
 |----------|----------------|
@@ -334,27 +334,27 @@ Edit `config/laravel_auto_crud.php`:
 | array | `any[]` |
 | text, varchar, char | `string` |
 
-Nullable fields: adds `| null` to the type.
+Campos nullable: adiciona `| null` ao tipo.
 
-## Conventions
+## Convenções
 
-### Naming
+### Nomenclatura
 - Model: `Post`
 - Controller: `PostController`
-- Pages: `resources/js/pages/Posts/`
+- Páginas: `resources/js/pages/Posts/`
 - Type: `resources/js/types/post.d.ts`
-- Route: `posts.index`, `posts.store`, etc.
+- Rota: `posts.index`, `posts.store`, etc.
 
-### shadcn/ui Components Used
-- `Button` - Action buttons
-- `Card` - Data display
-- `Dialog` - Create/edit modals
-- `DropdownMenu` - Action menu
-- `Input` / `Textarea` - Form fields
-- `Label` - Form labels
-- `DataTable` - Table with pagination
+### Componentes shadcn/ui Utilizados
+- `Button` - Botões de ação
+- `Card` - Exibição de dados
+- `Dialog` - Modais de criação/edição
+- `DropdownMenu` - Menu de ações
+- `Input` / `Textarea` - Campos de formulário
+- `Label` - Labels de formulário
+- `DataTable` - Tabela com paginação
 
-### Folder Structure
+### Estrutura de Pastas
 ```
 resources/js/
 ├── pages/
@@ -371,44 +371,44 @@ resources/js/
     └── app-layout.tsx
 ```
 
-## Compatibility
+## Compatibilidade
 
-This extension is compatible with all features of the original package:
+Esta extensão é compatível com todas as features do pacote original:
 
 - ✅ API Controllers
 - ✅ Web Controllers (Blade)
-- ✅ **Inertia React Controllers (NEW)**
+- ✅ **Inertia React Controllers (NOVO)**
 - ✅ Repository Pattern
 - ✅ Spatie Data Pattern
 - ✅ Form Requests
 - ✅ API Resources
 - ✅ Enum Generation
 
-You can combine types:
+Você pode combinar tipos:
 
 ```bash
-# Generate API + Inertia React together
+# Gerar API + Inertia React juntos
 php artisan auto-crud:generate --model=Post --type=api --type=inertia-react
 ```
 
-## Differences from Original Package
+## Diferenças do Pacote Original
 
-### What was added:
-1. New type: `--type=inertia-react`
-2. React/TSX page generation
-3. TypeScript type generation
-4. shadcn/ui integration
-5. Dialogs for create/edit
+### O que foi adicionado:
+1. Novo tipo: `--type=inertia-react`
+2. Geração de páginas React/TSX
+3. Geração de tipos TypeScript
+4. Integração com shadcn/ui
+5. Dialogs para criação/edição
 6. DataTable component
 
-### What remains the same:
-- All original functionality (API, Web, Repository, Spatie Data)
-- Command structure
-- Base configuration
+### O que permanece igual:
+- Toda funcionalidade original (API, Web, Repository, Spatie Data)
+- Estrutura de comandos
+- Configuração base
 
 ## DataTable Component
 
-The DataTable component is custom and does not come by default with shadcn/ui. Create the file `resources/js/components/ui/data-table.tsx`:
+O componente DataTable é customizado e não vem por padrão com o shadcn/ui. Crie o arquivo `resources/js/components/ui/data-table.tsx`:
 
 ```tsx
 import {
@@ -500,7 +500,7 @@ export function DataTable<TData, TValue>({
                                     colSpan={columns.length}
                                     className="h-24 text-center"
                                 >
-                                    No results found.
+                                    Nenhum resultado encontrado.
                                 </TableCell>
                             </TableRow>
                         )}
@@ -510,7 +510,7 @@ export function DataTable<TData, TValue>({
             {pagination && pagination.lastPage > 1 && (
                 <div className="flex items-center justify-between py-4">
                     <span className="text-sm text-muted-foreground">
-                        Page {pagination.currentPage} of {pagination.lastPage} ({pagination.total} items)
+                        Página {pagination.currentPage} de {pagination.lastPage} ({pagination.total} itens)
                     </span>
                     <div className="flex gap-2">
                         <Button
@@ -519,7 +519,7 @@ export function DataTable<TData, TValue>({
                             onClick={() => handlePageChange(pagination.currentPage - 1)}
                             disabled={pagination.currentPage <= 1}
                         >
-                            Previous
+                            Anterior
                         </Button>
                         <Button
                             variant="outline"
@@ -527,7 +527,7 @@ export function DataTable<TData, TValue>({
                             onClick={() => handlePageChange(pagination.currentPage + 1)}
                             disabled={pagination.currentPage >= pagination.lastPage}
                         >
-                            Next
+                            Próximo
                         </Button>
                     </div>
                 </div>
@@ -539,60 +539,60 @@ export function DataTable<TData, TValue>({
 
 ## Troubleshooting
 
-### Error: "Class 'Inertia' not found"
-The Laravel 12 React Starter Kit already includes Inertia.js. If you are using a manual installation without the starter kit, install:
+### Erro: "Class 'Inertia' not found"
+O Laravel 12 React Starter Kit já inclui o Inertia.js. Se estiver usando uma instalação manual sem o starter kit, instale:
 ```bash
 composer require inertiajs/inertia-laravel
 npm install @inertiajs/react
 ```
 
-### Error: shadcn/ui components not found
-Install the required components:
+### Erro: Componentes shadcn/ui não encontrados
+Instale os componentes necessários:
 ```bash
 npx shadcn@latest add button card dialog dropdown-menu input label textarea table
 ```
 
-### DataTable not found
-See the [DataTable Component](#datatable-component) section above to create the custom component.
+### DataTable não encontrado
+Veja a seção [DataTable Component](#datatable-component) acima para criar o componente customizado.
 
-### Error: Module '@tanstack/react-table' not found
-Install the dependency:
+### Erro: Module '@tanstack/react-table' not found
+Instale a dependência:
 ```bash
 npm install @tanstack/react-table
 ```
 
-## Installation Summary
+## Resumo da Instalação
 
 ```bash
-# 1. Install Laravel Installer (if needed)
+# 1. Instalar o Laravel Installer (se necessário)
 composer global require laravel/installer
 
-# 2. Create Laravel 12 project with React Starter Kit
-laravel new my-project --react
-cd my-project
+# 2. Criar projeto Laravel 12 com React Starter Kit
+laravel new meu-projeto --react
+cd meu-projeto
 npm install && npm run build
 
-# 3. Install additional dependencies (if needed)
+# 3. Instalar dependências adicionais (se necessário)
 npx shadcn@latest add button card dialog dropdown-menu input label textarea table
 npm install @tanstack/react-table
 
-# 4. Install the package
+# 4. Instalar o pacote
 composer require affonso/laravel-auto-crud-react --dev
 
-# 5. Publish configuration
+# 5. Publicar configuração
 php artisan vendor:publish --tag="auto-crud-config"
 
-# 6. Create the DataTable component (see section above)
+# 6. Criar o componente DataTable (veja a seção acima)
 
-# 7. Generate CRUD
-php artisan auto-crud:generate --model=YourModel --type=inertia-react
+# 7. Gerar CRUD
+php artisan auto-crud:generate --model=SeuModel --type=inertia-react
 ```
 
-## License
+## Licença
 
 MIT License.
 
-## Credits
+## Créditos
 
-- Based on: [mrmarchone/laravel-auto-crud](https://github.com/mrmarchone/laravel-auto-crud)
-- Fork with Inertia React support: [affonso/laravel-auto-crud-react](https://github.com/affonso/laravel-auto-crud-react)
+- Baseado em: [mrmarchone/laravel-auto-crud](https://github.com/mrmarchone/laravel-auto-crud)
+- Fork com suporte Inertia React: [affonso/laravel-auto-crud-react](https://github.com/affonso/laravel-auto-crud-react)
