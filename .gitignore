@@ -3,3 +3,4 @@
 composer.lock
 .phpunit.cache
 GIT-COMMANDS.txt
+.claude/settings.local.json
