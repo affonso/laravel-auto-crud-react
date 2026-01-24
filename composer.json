@@ -1,5 +1,5 @@
 {
-    "name": "mrmarchone/laravel-auto-crud",
+    "name": "affonso/laravel-auto-crud-react",
     "description": "Laravel Auto CRUD with Inertia React support - helps you streamline development and save time.",
     "type": "library",
     "keywords": ["laravel", "crud", "generator", "inertia", "react", "typescript", "shadcn"],
