@@ -2,14 +2,14 @@
     "name": "affonso/laravel-auto-crud-react",
     "description": "Laravel Auto CRUD with Inertia React support - helps you streamline development and save time.",
     "type": "library",
+    "license": "MIT",
     "keywords": ["laravel", "crud", "generator", "inertia", "react", "typescript", "shadcn"],
     "require": {
-        "php": ">=8.2",
-        "illuminate/support": "^12.0",
-        "laravel/prompts": "*",
-        "spatie/laravel-data": "*"
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "laravel/prompts": "^0.1|^0.2|^0.3",
+        "spatie/laravel-data": "^4.0"
     },
-    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Mrmarchone\\LaravelAutoCrud\\": "src/"
@@ -36,12 +36,13 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require-dev": {
-        "laravel/pint": "*",
-        "pestphp/pest": "^3.7",
-        "orchestra/testbench": "^9.9",
-        "mockery/mockery": "*"
+        "laravel/pint": "^1.0",
+        "mockery/mockery": "^1.6",
+        "orchestra/testbench": "^9.0",
+        "pestphp/pest": "^3.0"
     },
     "config": {
+        "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true
         }
