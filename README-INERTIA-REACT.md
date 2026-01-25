@@ -76,6 +76,8 @@ Install the package:
 composer require affonso/laravel-auto-crud-react:dev-main --dev
 ```
 
+> **⚠️ Note:** This package is currently in active development. You must specify `:dev-main` when installing because stable releases are not yet available. If you encounter a "Could not find a version matching your minimum-stability (stable)" error, this flag is required.
+
 ### Step 4: Publish the configuration
 
 Publish the configuration file:
@@ -539,6 +541,29 @@ export function DataTable<TData, TValue>({
 
 ## Troubleshooting
 
+### Error: "Could not find a version matching your minimum-stability (stable)"
+
+This error occurs because the package is currently in development without stable releases. Make sure to install using the `:dev-main` flag:
+
+```bash
+composer require affonso/laravel-auto-crud-react:dev-main --dev
+```
+
+If you still encounter issues, you can temporarily adjust your project's `composer.json`:
+
+```json
+{
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
+```
+
+Then run:
+```bash
+composer update
+composer require affonso/laravel-auto-crud-react:dev-main --dev
+```
+
 ### Error: "Class 'Inertia' not found"
 The Laravel 12 React Starter Kit already includes Inertia.js. If you are using a manual installation without the starter kit, install:
 ```bash
@@ -577,7 +602,7 @@ npx shadcn@latest add button card dialog dropdown-menu input label textarea tabl
 npm install @tanstack/react-table
 
 # 4. Install the package
-composer require affonso/laravel-auto-crud-react --dev
+composer require affonso/laravel-auto-crud-react:dev-main --dev
 
 # 5. Publish configuration
 php artisan vendor:publish --tag="auto-crud-config"
