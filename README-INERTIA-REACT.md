@@ -73,7 +73,7 @@ npx shadcn@latest add button card dialog dropdown-menu input label textarea tabl
 Install the package:
 
 ```bash
-composer require affonso/laravel-auto-crud-react --dev
+composer require affonso/laravel-auto-crud-react:dev-main --dev
 ```
 
 ### Step 4: Publish the configuration
